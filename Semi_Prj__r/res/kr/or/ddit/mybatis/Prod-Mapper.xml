@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Prod-Mapper">
+	
+	<sql id="search">
+		<if test="searchType == 'n'.toString()">
+			and name like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'd'.toString()">
+			and detail like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and category like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'nc'.toString()">
+			and (
+			name like '%'||#{keyword}||'%'
+			or
+			category like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'dc'.toString()">
+			and (
+			detail like '%'||#{keyword}||'%'
+			or
+			category like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'ndc'.toString()">
+			and (
+			name like '%'||#{keyword}||'%'
+			or
+			detail like '%'||#{keyword}||'%'
+			or
+			category like '%'||#{keyword}||'%'						
+			)			
+		</if>
+	</sql>
+	<select id="selectSearchProdList" resultType="prod">
+		select
+		* 
+		from prod
+		where id is not null
+		<include refid="search" />
+		order by regdate desc
+	</select>
+	<select id="selectSearchProdListCount" resultType="int">
+		select
+		count(*) 
+		from prod
+		where id is not null
+		<include refid="search" />
+		order by regdate desc
+		
+	</select>
+	<select id="selectProdById" parameterType="str" resultType="prod">
+		select 
+		* 
+		from prod
+		where id=#{id}
+	</select>
+	<select id="selectProdByCategory" parameterType="str" resultType="prod">
+		select 
+		* 
+		from prod
+		where category=#{category}
+	</select>
+	<select id="selectSearchProdListByCategoryCount" resultType="int">
+		select
+		count(*) 
+		from prod
+		where id is not null
+		<include refid="search" />
+		and category=#{category}
+		order by regdate desc
+		
+	</select>
+	<select id="selectProdSequenceNextValue" resultType="int">
+		select prod_seq.nextVal
+		from dual
+	</select>
+	
+	<update id="modifyProdQty" parameterType="prod">
+		update prod
+		set    qty = qty - #{qty}
+		where  id = #{id}
+	</update>
+	
+	<update id="increaseViewCount" parameterType="int">
+		update prod
+		set viewcnt=viewcnt+1
+		where id=#{id}
+	</update>
+	
+	<update id="insertProd" parameterType="prod">
+		insert into 
+		prod(id, name, outline, detail, price, category, picture, qty, regdate)
+		values(#{id},#{name},#{outline},#{detail},#{price},#{category},	#{picture},#{qty},sysdate)
+	</update>	
+	
+		
+	<update id="updateProd" parameterType="prod">
+		update prod 
+		set 
+		name=#{name}, outline=#{outline}, detail=#{detail}, 
+		price=#{price}, category=#{category}, picture=#{picture}, qty=#{qty}
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteProd" >
+		delete 
+		from prod 
+		where id=#{id}		
+	</delete>
+</mapper>
+
+
+
+	
+
+
+
+

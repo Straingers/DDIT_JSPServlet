@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="member">
+	<select id="selectAllMember" resultClass="com.servlet.dto.MemberVO">
+		SELECT MEM_ID   memId
+			 , MEM_PW   memPw
+			 , MEM_NAME memName
+			 , MEM_TEL  memTel
+		FROM   JSP_MEMBER 
+	</select>
+	
+	<select id="selectMemberById" parameterClass="String" resultClass="com.servlet.dto.MemberVO">
+		SELECT MEM_ID   memId
+			 , MEM_PW   memPw
+			 , MEM_NAME memName
+			 , MEM_TEL  memTel
+		FROM   JSP_MEMBER 
+		WHERE  MEM_ID = #memId#
+	</select>
+
+	<select id="getMember" parameterClass="String" resultClass="com.servlet.dto.MemberVO">
+		SELECT MEM_ID   memId
+			 , MEM_PW   memPw
+			 , MEM_NAME memName
+			 , MEM_TEL  memTel
+		FROM   JSP_MEMBER 
+		WHERE  MEM_ID = #memId#
+	</select>
+	
+	<update id="memberInsert" parameterClass="com.servlet.dto.MemberVO">
+		INSERT INTO JSP_MEMBER(
+			MEM_ID
+		  , MEM_PW
+		  , MEM_NAME
+		  , MEM_TEL
+		)
+		VALUES(
+			#memId#
+		  , #memPw#
+		  , #memName#
+		  , #memTel# 
+		)
+	</update>
+	
+	<update id="memberUpdate" parameterClass="com.servlet.dto.MemberVO">
+		UPDATE JSP_MEMBER 
+		SET    MEM_PW = #memPw#
+			 , MEM_TEL = #memTel# 
+		WHERE  MEM_ID = #memId#
+	</update>
+	
+	<delete id="memberDelete" parameterClass="String">
+		DELETE FROM JSP_MEMBER
+		WHERE  MEM_ID = #memId#
+	</delete>
+	
+	<select id="memberSign" parameterClass="com.servlet.dto.MemberVO" resultClass="int">
+		SELECT COUNT(*)
+		FROM   JSP_MEMBER
+		WHERE  MEM_ID = #memId#
+		AND    MEM_PW = #memPw#
+	</select>
+	
+	<select id="MemIdCheck" parameterClass="String" resultClass="int">
+		SELECT COUNT(*)
+		FROM   JSP_MEMBER
+		WHERE  MEM_ID = #memId#
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Pds-Mapper">
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			AND TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			AND WRITER LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			AND CONTENT LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			AND (
+				TITLE LIKE '%' || #{keyword} || '%'
+				OR  CONTENT LIKE '%' || #{keyword} || '%'
+				) 
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			AND (
+				WRITER LIKE '%' || #{keyword} || '%'
+				OR  CONTENT LIKE '%' || #{keyword} || '%'
+				) 
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			AND (
+				TITLE LIKE '%' || #{keyword} || '%'
+				OR  WRITER LIKE '%' || #{keyword} || '%'
+				OR  CONTENT LIKE '%' || #{keyword} || '%'
+				) 
+		</if>
+	</sql>
+	
+	<select id="selectSearchPdsList" resultType="pds">
+		SELECT *
+		FROM   PDS
+		WHERE  PNO IS NOT NULL
+		<include refid="search" />
+		ORDER  BY REGDATE DESC
+	</select>
+	
+	<select id="selectSearchPdsListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM   PDS
+		WHERE  PNO IS NOT NULL
+		<include refid="search" />
+		ORDER  BY REGDATE DESC
+	</select>
+	
+	<select id="selectPdsByPno" parameterType="int" resultType="pds">
+		SELECT *
+		FROM   PDS
+		WHERE  PNO = #{pno}
+	</select>
+	
+	<select id="selectPdsSequenceNextValue" resultType="int">
+		SELECT PDS_SEQ.NEXTVAL
+		FROM   DUAL
+	</select>
+	
+	<update id="increaseViewCount" parameterType="int">
+		UPDATE PDS
+		SET    VIEWCNT = VIEWCNT + 1
+		WHERE  PNO = #{pno}
+	</update>
+	
+	<update id="insertPds" parameterType="pds">
+		INSERT INTO PDS(
+			  PNO
+			, TITLE
+			, WRITER
+			, CONTENT
+		) VALUES(
+			  #{pno}
+			, #{title}
+			, #{writer}
+			, #{content}
+		)
+	</update>
+	
+	<update id="updatePds" parameterType="pds">
+		UPDATE PDS
+		SET    TITLE = #{title}
+			 , CONTENT = #{content}
+		WHERE  PNO = #{pno}
+	</update>
+	
+	<update id="deletePds" parameterType="int">
+		DELETE FROM PDS
+		WHERE  PNO = #{pno}
+	</update>
+</mapper>

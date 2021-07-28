@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans>
+	<!-- dataSource -->
+	<bean id="sqlSessionFactory"
+		class="kr.or.ddit.mybatis.OracleMyBatisSqlSessionFactory" />
+
+
+	<!-- Repository Layer -->
+	<bean id="menuDAO" class="kr.or.ddit.dao.MenuDAOImpl" />
+	<bean id="memberDAO" class="kr.or.ddit.dao.MemberDAOImpl" />
+	<bean id="orderDAO" class="kr.or.ddit.dao.OrderDAOImpl" />
+	<bean id="noticeDAO" class="kr.or.ddit.dao.NoticeDAOImpl" />
+	<bean id="boardDAO" class="kr.or.ddit.dao.BoardDAOImpl" />
+	<bean id="replyDAO" class="kr.or.ddit.dao.ReplyDAOImpl" />
+	<bean class="kr.or.ddit.dao.ProdDAOImpl" id="prodDAO" />
+
+	<!-- Service layer -->
+	<bean id="menuService" class="kr.or.ddit.service.MenuServiceImpl">
+		<property name="sqlSessionFactory"
+			ref-value="sqlSessionFactory" />
+		<property name="menuDAO" ref-value="menuDAO" />
+	</bean>
+
+	<bean id="memberService"
+		class="kr.or.ddit.service.MemberServiceImpl">
+		<property name="sqlSessionFactory"
+			ref-value="sqlSessionFactory" />
+		<property name="memberDAO" ref-value="memberDAO" />
+	</bean>
+
+	<bean id="orderService"
+		class="kr.or.ddit.service.OrderServiceImpl">
+		<property name="sqlSessionFactory"
+			ref-value="sqlSessionFactory" />
+		<property name="orderDAO" ref-value="orderDAO" />
+	</bean>
+
+	<bean id="boardService"
+		class="kr.or.ddit.service.BoardServiceImpl">
+		<property name="sqlSessionFactory"
+			ref-value="sqlSessionFactory" />
+		<property name="boardDAO" ref-value="boardDAO" />
+		<property name="replyDAO" ref-value="replyDAO" />
+	</bean>
+
+	<bean id="noticeService"
+		class="kr.or.ddit.service.NoticeServiceImpl">
+		<property name="sqlSessionFactory"
+			ref-value="sqlSessionFactory" />
+		<property name="noticeDAO" ref-value="noticeDAO" />
+	</bean>
+
+	<bean id="replyService"
+		class="kr.or.ddit.service.ReplyServiceImpl">
+		<property name="sqlSessionFactory"
+			ref-value="sqlSessionFactory" />
+		<property name="replyDAO" ref-value="replyDAO" />
+	</bean>
+
+	<bean class="kr.or.ddit.service.ProdServiceImpl" id="prodService">
+		<property ref-value="sqlSessionFactory" name="sqlSessionFactory" />
+		<property ref-value="prodDAO" name="prodDAO" />
+		<property ref-value="replyDAO" name="replyDAO" />
+	</bean>
+
+</beans>

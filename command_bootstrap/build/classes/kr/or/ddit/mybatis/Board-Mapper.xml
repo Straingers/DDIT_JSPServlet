@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board-Mapper">
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			AND TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'w'.toString()">
+			AND WRITER LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'c'.toString()">
+			AND CONTENT LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			AND (
+				TITLE LIKE '%' || #{keyword} || '%'
+				OR  CONTENT LIKE '%' || #{keyword} || '%'
+				) 
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			AND (
+				WRITER LIKE '%' || #{keyword} || '%'
+				OR  CONTENT LIKE '%' || #{keyword} || '%'
+				) 
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			AND (
+				TITLE LIKE '%' || #{keyword} || '%'
+				OR  WRITER LIKE '%' || #{keyword} || '%'
+				OR  CONTENT LIKE '%' || #{keyword} || '%'
+				) 
+		</if>
+	</sql>
+	
+	<select id="selectSearchBoardList" resultType="board">
+		SELECT *
+		FROM   BOARD
+		WHERE  BNO IS NOT NULL
+		<include refid="search" />
+		ORDER  BY REGDATE DESC
+	</select>
+	
+	<select id="selectSearchBoardListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM   BOARD
+		WHERE  BNO IS NOT NULL
+		<include refid="search" />
+		ORDER  BY REGDATE DESC
+	</select>
+	
+	<select id="selectBoardByBno" parameterType="int" resultType="board">
+		SELECT *
+		FROM   BOARD
+		WHERE  BNO = #{bno}
+	</select>
+	
+	<select id="selectBoardSequenceNextValue" resultType="int">
+		SELECT BOARD_SEQ.NEXTVAL
+		FROM   DUAL
+	</select>
+	
+	<update id="increaseViewCount" parameterType="int">
+		UPDATE BOARD
+		SET    VIEWCNT = VIEWCNT + 1
+		WHERE  BNO = #{bno}
+	</update>
+	
+	<update id="insertBoard" parameterType="board">
+		INSERT INTO BOARD(
+			  BNO
+			, TITLE
+			, WRITER
+			, CONTENT
+		) VALUES(
+			  #{bno}
+			, #{title}
+			, #{writer}
+			, #{content}
+		)
+	</update>
+	
+	<update id="updateBoard" parameterType="board">
+		UPDATE BOARD
+		SET    TITLE = #{title}
+			 , CONTENT = #{content}
+		WHERE  BNO = #{bno}
+	</update>
+	
+	<update id="deleteBoard" parameterType="int">
+		DELETE FROM BOARD
+		WHERE  BNO = #{bno}
+	</update>
+</mapper>

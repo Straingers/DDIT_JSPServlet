@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Member-Mapper">
+	
+	<select id="selectMemberById" parameterType="str" resultType="member">
+		select * 
+		from member 
+		where id=#{id}
+	</select>
+
+	<select id="checkedEnabledMember" parameterType="str" resultType="int">
+		select count(*) 
+		from member 
+		where id=#{id}
+		and enabled = 0
+	</select>
+
+	<update id="insertMember" parameterType="member">
+		insert into 
+		member(id, pwd, email,picture,name)
+		values(#{id},#{pwd},#{email},#{picture},#{name})
+	</update>	
+	
+	<update id="updateMember" parameterType="member">
+		update member
+		set
+		pwd=#{pwd},
+		email=#{email},
+		name=#{name},
+		picture=#{picture}
+		
+		<if test="authority != null">
+			,authority=#{authority}
+		</if>
+		
+		where id=#{id}
+	</update>
+	
+	<update id="deleteMember" parameterType="member">
+		delete from member where id = #{id}
+	</update>
+	
+	<update id="disabledMember" parameterType="member">
+  		update member
+  		set enabled = 0
+  		where id = #{id} 
+   </update>
+	
+</mapper>

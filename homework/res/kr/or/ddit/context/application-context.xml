@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<bean id="sqlSessionFactory" class="kr.or.ddit.mybatis.OracleMyBatisSessionFactory" />
+	<bean id="memberDAO" class="kr.or.ddit.dao.MemberDAOImpl" />
+	<bean id="memberService" class="kr.or.ddit.service.MemberServiceImpl">
+		<property name="sqlSessionFactory" ref-value="sqlSessionFactory" />
+		<property name="memberDAO" ref-value="memberDAO" />
+	</bean>
+</beans>

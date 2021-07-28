@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Order-Mapper">
+  
+	<select id="selectOrderList" resultType="order">
+		SELECT *
+		FROM   ORDERS
+  		WHERE  ID IS NOT NULL
+	</select>
+  	
+  	<select id="selectOrderListById" parameterType="str" resultType="order">
+  		SELECT *
+  		FROM   ORDERS
+  		WHERE  ID IS NOT NULL
+  		AND  ID = #{id}
+  	</select>
+  	
+  	<select id="selectOrderByOrderNo" parameterType="str" resultType="order">
+  		SELECT *
+  		FROM  ORDERS
+  		WHERE ORDERNO = #{orderNo}
+  	</select>
+  	
+  	<select id="selectOrderByProdId" resultType="order">
+  		SELECT *
+  		FROM ORDERS
+  		WHERE PRODID = #{prodId}
+  	</select>
+  	
+  	<update id="insertOrder">
+  		INSERT INTO ORDERS (
+  			ORDERNO
+			,ORDERTIME
+			,ORDERQTY
+			,ORDERCOST
+			,ORDERSTATUS
+			,ID
+			,PRODID
+			,PRODNAME
+			,PICTURE
+  		)
+  		VALUES(
+  		   	ORDERS_SEQ.NEXTVAL
+  			 ,SYSDATE
+  			 , #{orderQty}
+  			 , #{orderCost}
+  			 , '주문대기'
+  			 , #{id}
+  			 , #{prodId}
+  			 , #{prodName}
+  			 , #{picture}
+  		)
+  	</update>
+	
+	<update id="changeOrderStatus" parameterType="order">
+		UPDATE ORDERS
+		SET    ORDERSTATUS = #{orderStatus}
+		WHERE  ORDERNO = #{orderNo}
+	</update>
+	
+  	<update id="changeOrderQty" parameterType="order"> 
+  		UPDATE ORDERS
+  		SET    ORDERQTY = #{orderQty}
+  		WHERE  ORDERNO = #{orderNo}
+  	</update>
+  	
+  	<update id="deleteOrder" parameterType="str">
+  		DELETE FROM ORDERS
+  		WHERE  ORDERNO = #{orderNo}
+  	</update>
+</mapper>
+
+
+
+
+

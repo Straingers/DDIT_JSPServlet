@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Member-Mapper">
+
+	<sql id="search">
+		<if test="searchType == 'i'.toString()">
+			AND ID LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'p'.toString()">
+			AND PHONE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'e'.toString()">
+			AND EMAIL LIKE '%' || #{keyword} || '%'
+		</if>
+	</sql>
+
+	<select id="selectSearchMemberList" resultType="member">
+		SELECT *
+		FROM   MEMBER
+		WHERE  ID IS NOT NULL
+		<include refid="search" />
+		ORDER  BY REGDATE DESC
+	</select>
+	
+	<select id="selectSearchMemberListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM   MEMBER
+		WHERE  ID IS NOT NULL
+		<include refid="search" />
+	</select>
+	
+	<select id="selectMemberById" resultType="member">
+		SELECT *
+		FROM   MEMBER
+		WHERE  ID = #{id}
+	</select>
+
+	<select id="selectMemberList" resultType="member">
+		SELECT *
+		FROM   MEMBER
+	</select>
+	
+	<update id="insertMember" parameterType="member">
+		INSERT INTO MEMBER(
+			ID
+		  , PWD
+		  , EMAIL
+		  , PHONE
+		  , PICTURE
+		  , NAME
+		  , AUTHORITY
+		)
+		VALUES(
+			#{id}
+		  , #{pwd}
+		  , #{email}
+		  , #{phone}
+		  , #{picture}
+		  , #{name}
+		  , #{authority}
+		)
+	</update>
+	
+	<update id="updateMember" parameterType="member">
+		UPDATE MEMBER
+		SET    PWD = #{pwd}
+			 , EMAIL = #{email}
+			 , PHONE = #{phone}
+			 , PICTURE = #{picture}
+			 , NAME = #{name}
+		 <if test="authority != null">
+			 , AUTHORITY = #{authority}
+		 </if>
+		WHERE  ID = #{id}
+	</update>
+	
+	<delete id="deleteMember">
+		DELETE FROM MEMBER
+		WHERE  ID = #{id}
+	</delete>
+	
+	<update id="disabledMember">
+		UPDATE MEMBER
+		SET    ENABLED = 0
+		WHERE  ID = #{id}
+	</update>
+
+	<update id="enabledMember">
+		UPDATE MEMBER
+		SET    ENABLED = 1
+		WHERE  ID = #{id}
+	</update>
+</mapper>
